@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.1...3.15 FATAL_ERROR)
 
 file(STRINGS "${CMAKE_CURRENT_LIST_DIR}/src/oatpp/core/base/Environment.hpp" OATPP_VERSION_MACRO REGEX "#define OATPP_VERSION \"[0-9]+.[0-9]+.[0-9]+\"$")
 string(REGEX REPLACE "#define OATPP_VERSION \"([0-9]+.[0-9]+.[0-9]+)\"$" "\\1" oatpp_VERSION "${OATPP_VERSION_MACRO}")
@@ -20,6 +20,15 @@ option(OATPP_BUILD_TESTS "Create test target for oat++" ON)
 option(OATPP_LINK_TEST_LIBRARY "Link oat++ test library" ON)
 option(OATPP_LINK_ATOMIC "Link atomic library for other platform than MSVC|MINGW|APPLE|FreeBSD" ON)
 option(OATPP_MSVC_LINK_STATIC_RUNTIME "MSVC: Link with static runtime (/MT and /MTd)." OFF)
+
+option(OATPP_WITH_SHARED_LIBRARIES "Build shared version of the Oatpp libraries." OFF)
+option(OATPP_WITH_VERBOSE_MESSAGE "Build Oatpp with verbose message." OFF)
+option(OATPP_WITHOUT_INSTALL_ALL "Build Oatpp without installing all artifacts." OFF)
+if(OATPP_WITH_SHARED_LIBRARIES)
+    set(BUILD_SHARED_LIBS ON)
+else()
+    set(BUILD_SHARED_LIBS OFF)
+endif()
 
 ###################################################################################################
 ## COMPILATION CONFIG #############################################################################
@@ -51,12 +60,14 @@ option(OATPP_DISABLE_LOGE "DISABLE logs priority E" OFF)
 
 ## Print config ##################################################################################
 
-message("\n############################################################################")
-message("## oatpp module compilation config:\n")
+if(OATPP_WITH_VERBOSE_MESSAGE)
+    message("\n############################################################################")
+    message("## oatpp module compilation config:\n")
 
-message("OATPP_DISABLE_ENV_OBJECT_COUNTERS=${OATPP_DISABLE_ENV_OBJECT_COUNTERS}")
-message("OATPP_THREAD_HARDWARE_CONCURRENCY=${OATPP_THREAD_HARDWARE_CONCURRENCY}")
-message("OATPP_COMPAT_BUILD_NO_THREAD_LOCAL=${OATPP_COMPAT_BUILD_NO_THREAD_LOCAL}")
+    message("OATPP_DISABLE_ENV_OBJECT_COUNTERS=${OATPP_DISABLE_ENV_OBJECT_COUNTERS}")
+    message("OATPP_THREAD_HARDWARE_CONCURRENCY=${OATPP_THREAD_HARDWARE_CONCURRENCY}")
+    message("OATPP_COMPAT_BUILD_NO_THREAD_LOCAL=${OATPP_COMPAT_BUILD_NO_THREAD_LOCAL}")
+endif()
 
 ## Set definitions ###############################################################################
 
@@ -111,16 +122,18 @@ if(CMAKE_COMPILER_IS_GNUCXX AND ${CMAKE_CXX_COMPILER_VERSION} VERSION_LESS 5.0)
     add_definitions(-DOATPP_DISABLE_STD_PUT_TIME)
 endif()
 
-message("\n############################################################################\n")
+if(OATPP_WITH_VERBOSE_MESSAGE)
+    message("\n############################################################################\n")
+endif()
 
 ###################################################################################################
 
-message("oatpp version: '${OATPP_THIS_MODULE_VERSION}'")
+message(STATUS "Oatpp version: ${OATPP_THIS_MODULE_VERSION}")
 
 include(cmake/compiler-flags.cmake)
 
-include(cmake/msvc-runtime.cmake)
-configure_msvc_runtime()
+#include(cmake/msvc-runtime.cmake)
+#configure_msvc_runtime()
 
 include(cmake/project.cmake)
 
