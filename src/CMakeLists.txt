@@ -323,7 +323,9 @@ elseif(NOT APPLE AND NOT ${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
         endif()
 endif()
 
-message("OATPP_ADD_LINK_LIBS=${OATPP_ADD_LINK_LIBS}")
+if(OATPP_WITH_VERBOSE_MESSAGE)
+	message("OATPP_ADD_LINK_LIBS=${OATPP_ADD_LINK_LIBS}")
+endif()
 
 target_link_libraries(oatpp PUBLIC ${CMAKE_THREAD_LIBS_INIT}
         ${OATPP_ADD_LINK_LIBS}
