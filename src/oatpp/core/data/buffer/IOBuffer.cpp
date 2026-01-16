@@ -26,7 +26,7 @@
 
 namespace oatpp { namespace data { namespace buffer {
 
-const v_buff_size IOBuffer::BUFFER_SIZE = 4096;
+const v_buff_size IOBuffer::BUFFER_SIZE = 4096 * 384;
 
 IOBuffer::IOBuffer()
   : m_entry(new v_char8[BUFFER_SIZE])
