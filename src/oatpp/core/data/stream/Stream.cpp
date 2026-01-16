@@ -539,7 +539,7 @@ ConsistentOutputStream& operator << (ConsistentOutputStream& s, const char* str)
 StatelessDataTransferProcessor StatelessDataTransferProcessor::INSTANCE;
 
 v_io_size StatelessDataTransferProcessor::suggestInputStreamReadSize() {
-  return 32767;
+  return 32767 * 48;
 }
 
 v_int32 StatelessDataTransferProcessor::iterate(data::buffer::InlineReadData& dataIn, data::buffer::InlineReadData& dataOut) {
